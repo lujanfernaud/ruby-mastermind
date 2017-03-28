@@ -24,3 +24,58 @@
 #    its next guess will need to include that color somewhere.
 #    Feel free to make the AI even smarter.
 
+require 'pry'
+
+class Computer
+  attr_reader :colors, :code
+
+  def initialize
+    @colors = %w(blue green red yellow)
+    @code   = [colors.sample, colors.sample, colors.sample, colors.sample]
+  end
+end
+
+class Player
+  attr_accessor :guess
+
+  def initialize
+    @guess = []
+  end
+
+  def input
+    puts "Please introduce a code:"
+    @guess = gets.chomp.split
+  end
+end
+
+class Game
+  attr_reader   :computer, :player
+  attr_accessor :turns
+
+  def initialize
+    @computer = Computer.new
+    @player   = Player.new
+    @turns    = 12
+  end
+
+  def start
+    loop do
+      print_output
+      player.input
+      player_wins if player.guess == computer.code
+      @turns -= 1
+    end
+  end
+
+  def print_output
+    system "clear" or system "cls"
+    puts "You have #{turns} opportunities to guess the code."
+  end
+
+  def player_wins
+    puts "You WIN!\n\n"
+    exit
+  end
+end
+
+Game.new.start

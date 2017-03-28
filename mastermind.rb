@@ -64,6 +64,7 @@ class Game
       player.input
       player_wins if player.guess == computer.code
       @turns -= 1
+      player_loses if @turns.zero?
     end
   end
 
@@ -74,6 +75,11 @@ class Game
 
   def player_wins
     puts "You WIN!\n\n"
+    exit
+  end
+
+  def player_loses
+    puts "You lose!\n\n"
     exit
   end
 end

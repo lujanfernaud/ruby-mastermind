@@ -70,15 +70,21 @@ class Game
 
   def print_output
     system "clear" or system "cls"
-    puts "You have #{turns} opportunities to guess the code."
+    if turns > 1
+      puts "You have #{turns} opportunities to guess the code.\n\n"
+    else
+      puts "You only have #{turns} opportunity left.\n\n"
+    end
   end
 
   def player_wins
+    system "clear" or system "cls"
     puts "You WIN!\n\n"
     exit
   end
 
   def player_loses
+    system "clear" or system "cls"
     puts "You lose!\n\n"
     exit
   end

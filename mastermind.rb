@@ -33,6 +33,27 @@ class Computer
     @colors = %w(blue green red yellow)
     @code   = [colors.sample, colors.sample, colors.sample, colors.sample]
   end
+
+  def check_guess(input)
+    position_matches = []
+    color_matches    = []
+
+    input.each.with_index do |guess_color, index|
+      code.each do |code_color|
+        position_matches << true if guess_color == code[index]
+
+        if color_matches.none? { |color| color == guess_color }
+          color_matches << guess_color if guess_color == code_color
+        end
+
+        break
+      end
+      next
+    end
+
+    puts "\nCorrect colors: #{color_matches.length}"
+    puts "In position:    #{position_matches.length}\n\n"
+  end
 end
 
 class Player
@@ -62,6 +83,7 @@ class Game
     loop do
       print_output
       player.input
+      computer.check_guess(player.guess)
       player_wins if player.guess == computer.code
       @turns -= 1
       player_loses if @turns.zero?
@@ -69,7 +91,7 @@ class Game
   end
 
   def print_output
-    system "clear" or system "cls"
+    # system "clear" or system "cls"
     if turns > 1
       puts "You have #{turns} opportunities to guess the code.\n\n"
     else

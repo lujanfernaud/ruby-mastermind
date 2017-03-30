@@ -34,7 +34,7 @@ class Computer
     @code   = [colors.sample, colors.sample, colors.sample, colors.sample]
   end
 
-  def check_guess(input)
+  def check(input)
     position_matches = []
     color_matches    = []
 
@@ -82,7 +82,7 @@ class Game
     loop do
       print_output
       player.input
-      computer.check_guess(player.guess)
+      computer.check(player.guess)
       player_wins if player.guess == computer.code
       @turns -= 1
       player_loses if @turns.zero?

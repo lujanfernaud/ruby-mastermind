@@ -39,20 +39,19 @@ class Computer
     color_matches    = []
 
     input.each.with_index do |guess_color, index|
-      code.each do |code_color|
+      code.each do |_code_color|
         position_matches << true if guess_color == code[index]
-
-        if color_matches.none? { |color| color == guess_color }
-          color_matches << guess_color if guess_color == code_color
-        end
-
         break
       end
-      next
+
+      color_match = code.any? { |color| color == guess_color }
+      color_not_in_matches = color_matches.none? { |color| color == guess_color }
+
+      color_matches << guess_color if color_match && color_not_in_matches
     end
 
-    puts "\nCorrect colors: #{color_matches.length}"
-    puts "In position:    #{position_matches.length}\n\n"
+    puts "\nColors:    #{color_matches.length}"
+    puts "Positions: #{position_matches.length}\n\n"
   end
 end
 

@@ -26,12 +26,39 @@
 
 require 'pry'
 
-class Computer
-  attr_reader :colors, :code
+class Player
+  attr_accessor :guess, :guesses
 
   def initialize
-    @colors = %w(blue green red yellow)
-    @code   = [colors.sample, colors.sample, colors.sample, colors.sample]
+    @guess = []
+  end
+
+  def input(game)
+    puts "Please introduce a code:"
+    @guess = gets.chomp.split
+  end
+end
+
+class Game
+  attr_reader   :player, :colors, :code
+  attr_accessor :turns
+
+  def initialize
+    @player   = Player.new
+    @colors   = %w(blue green red yellow)
+    @code     = [colors.sample, colors.sample, colors.sample, colors.sample]
+    @turns    = 12
+  end
+
+  def start
+    loop do
+      print_output
+      player.input(self)
+      check(player.guess)
+      player_wins if player.guess == code
+      @turns -= 1
+      player_loses if @turns.zero?
+    end
   end
 
   def check(input)
@@ -52,41 +79,6 @@ class Computer
 
     puts "\nColors:    #{color_matches.length}"
     puts "Positions: #{position_matches.length}\n\n"
-  end
-end
-
-class Player
-  attr_accessor :guess
-
-  def initialize
-    @guess = []
-  end
-
-  def input
-    puts "Please introduce a code:"
-    @guess = gets.chomp.split
-  end
-end
-
-class Game
-  attr_reader   :computer, :player
-  attr_accessor :turns
-
-  def initialize
-    @computer = Computer.new
-    @player   = Player.new
-    @turns    = 12
-  end
-
-  def start
-    loop do
-      print_output
-      player.input
-      computer.check(player.guess)
-      player_wins if player.guess == computer.code
-      @turns -= 1
-      player_loses if @turns.zero?
-    end
   end
 
   def print_output

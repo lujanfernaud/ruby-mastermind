@@ -82,7 +82,7 @@ class Game
     @guesses << { guess: input, colors: colors.length, positions: positions.length }
   end
 
-  def print_board
+  def print_board(player_won: false)
     system "clear" or system "cls"
     # print "||" + (" " * 35) + "||" + (" " * 26) + "||\n"
     print "||" + "CODE".center(35) + "||" + "CORRECT".center(26) + "||\n"
@@ -97,11 +97,15 @@ class Game
       print "|--------------------------||\n"
     end
 
-    @guesses.reverse.each do |pair|
+    @guesses.reverse.each.with_index do |pair, index|
       print "|"
       pair[:guess].each { |color| print "| #{color.ljust(7)}" }
       print "|| "
-      print "Colors: #{pair[:colors]} | Positions: #{pair[:positions]} ||\n"
+      if player_won && guesses[index] == guesses.last
+        print "Colors: #{pair[:colors]} | Positions: #{pair[:positions]} || <=\n"
+      else
+        print "Colors: #{pair[:colors]} | Positions: #{pair[:positions]} ||\n"
+      end
       print "||"
       print "--------|" * 4
       print "|--------------------------||\n"
@@ -118,7 +122,7 @@ class Game
   end
 
   def player_wins
-    print_board
+    print_board(player_won: true)
     puts "\nYou WIN!\n\n"
     exit
   end

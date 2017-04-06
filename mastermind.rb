@@ -89,26 +89,17 @@ class Game
     print "||" + ("-" * 35) + "||" + ("-" * 26) + "||\n"
 
     @turns.times do
-      print "||"
-      print "        |" * 4
-      print "|" + (" " * 26) + "||\n"
-      print "||"
-      print "--------|" * 4
-      print "|--------------------------||\n"
+      print "||" + ("        |" * 4) + "|" + (" " * 26) + "||\n"
+      print "||" + ("--------|" * 4) + "|--------------------------||\n"
     end
 
     @guesses.reverse.each.with_index do |pair, index|
       print "|"
       pair[:guess].each { |color| print "| #{color.ljust(7)}" }
       print "|| "
-      if player_won && guesses[index] == guesses.last
-        print "Colors: #{pair[:colors]} | Positions: #{pair[:positions]} || <=\n"
-      else
-        print "Colors: #{pair[:colors]} | Positions: #{pair[:positions]} ||\n"
-      end
-      print "||"
-      print "--------|" * 4
-      print "|--------------------------||\n"
+      print "Colors: #{pair[:colors]} | Positions: #{pair[:positions]} ||"
+      print " <=" if player_won && @guesses[index] == @guesses.first
+      print "\n||" + ("--------|" * 4) + "|--------------------------||\n"
     end
   end
 

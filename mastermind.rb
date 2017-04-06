@@ -48,6 +48,7 @@ class Game
     @colors   = %w(blue green red yellow)
     @code     = [colors.sample, colors.sample, colors.sample, colors.sample]
     @turns    = 12
+    @guesses  = []
   end
 
   def start
@@ -62,31 +63,57 @@ class Game
   end
 
   def check(input)
-    position_matches = []
-    color_matches    = []
+    positions = []
+    colors    = []
 
     input.each.with_index do |guess_color, index|
       code.each do |_code_color|
-        position_matches << true if guess_color == code[index]
+        positions << true if guess_color == code[index]
         break
       end
 
       color_match = code.any? { |color| color == guess_color }
-      color_not_in_matches = color_matches.none? { |color| color == guess_color }
+      color_not_in_matches = colors.none? { |color| color == guess_color }
 
-      color_matches << guess_color if color_match && color_not_in_matches
+      colors << guess_color if color_match && color_not_in_matches
     end
 
-    puts "\nColors:    #{color_matches.length}"
-    puts "Positions: #{position_matches.length}\n\n"
+    @guesses << { guess: input, colors: colors.length, positions: positions.length }
+  end
+
+  def print_board
+    system "clear" or system "cls"
+    # print "||" + (" " * 35) + "||" + (" " * 26) + "||\n"
+    print "||" + "CODE".center(35) + "||" + "CORRECT".center(26) + "||\n"
+    print "||" + ("-" * 35) + "||" + ("-" * 26) + "||\n"
+
+    @turns.times do
+      print "||"
+      print "        |" * 4
+      print "|" + (" " * 26) + "||\n"
+      print "||"
+      print "--------|" * 4
+      print "|--------------------------||\n"
+    end
+
+    @guesses.reverse.each do |pair|
+      print "|"
+      pair[:guess].each { |color| print "| #{color.ljust(7)}" }
+      print "|| "
+      print "Colors: #{pair[:colors]} | Positions: #{pair[:positions]} ||\n"
+      print "||"
+      print "--------|" * 4
+      print "|--------------------------||\n"
+    end
   end
 
   def print_output
     # system "clear" or system "cls"
+    print_board
     if turns > 1
-      puts "You have #{turns} opportunities to guess the code.\n\n"
+      puts "\nYou have #{turns} opportunities to guess the code.\n\n"
     else
-      puts "You only have #{turns} opportunity left.\n\n"
+      puts "\nYou only have #{turns} opportunity left.\n\n"
     end
   end
 

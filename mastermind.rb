@@ -35,6 +35,7 @@ class Player
 
   def input(game)
     puts "Please introduce a code:"
+    print "> "
     @guess = gets.chomp.split
   end
 end
@@ -108,7 +109,6 @@ class Game
   end
 
   def print_output
-    # system "clear" or system "cls"
     print_board
     if turns > 1
       puts "\nYou have #{turns} opportunities to guess the code.\n\n"
@@ -118,14 +118,14 @@ class Game
   end
 
   def player_wins
-    system "clear" or system "cls"
-    puts "You WIN!\n\n"
+    print_board
+    puts "\nYou WIN!\n\n"
     exit
   end
 
   def player_loses
-    system "clear" or system "cls"
-    puts "You lose!\n\n"
+    print_board
+    puts "\nYou lose!\n\n"
     exit
   end
 end

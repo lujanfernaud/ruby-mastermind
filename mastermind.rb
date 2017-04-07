@@ -32,17 +32,13 @@ class Player
   def initialize
     @guess = []
   end
-
-  def input
-    @guess = gets.chomp.split
-  end
 end
 
 class Human < Player
   def input
     puts "Please introduce a code:"
     print "> "
-    super
+    @guess = gets.chomp.split
   end
 
   def addresser(turns_left)

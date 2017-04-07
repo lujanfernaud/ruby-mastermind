@@ -45,8 +45,8 @@ class Human < Player
     super
   end
 
-  def addresser(opportunities)
-    opportunities > 1 ? "You have" : "You only have"
+  def addresser(turns_left)
+    turns_left > 1 ? "You have" : "You only have"
   end
 
   def winning_message
@@ -67,8 +67,8 @@ class Computer < Player
     code_guesser
   end
 
-  def addresser(opportunities)
-    opportunities > 1 ? "The computer has" : "The computer only has"
+  def addresser(turns_left)
+    turns_left > 1 ? "The computer has" : "The computer only has"
   end
 
   def code_guesser
@@ -97,14 +97,14 @@ end
 
 class Game
   attr_reader   :player, :colors, :code
-  attr_accessor :turns
+  attr_accessor :turns_left
 
   def initialize
-    @player   = Human.new
-    @colors   = %w(blue green red yellow)
-    @code     = [colors.sample, colors.sample, colors.sample, colors.sample]
-    @turns    = 12
-    @guesses  = []
+    @player     = Human.new
+    @colors     = %w(blue green red yellow)
+    @code       = [colors.sample, colors.sample, colors.sample, colors.sample]
+    @turns_left = 12
+    @guesses    = []
   end
 
   def start
@@ -113,8 +113,8 @@ class Game
       player.input
       check(player.guess)
       player_wins if player.guess == code
-      @turns -= 1
-      player_loses if @turns.zero?
+      @turns_left -= 1
+      player_loses if @turns_left.zero?
     end
   end
 
@@ -157,7 +157,7 @@ class Game
     print "||" + "CODE".center(35) + "||" + "CORRECT".center(26) + "||\n"
     print "||" + ("-" * 35) + "||" + ("-" * 26) + "||\n"
 
-    @turns.times do
+    @turns_left.times do
       print "||" + ("        |" * 4) + "|" + (" " * 26) + "||\n"
       print "||" + ("--------|" * 4) + "|--------------------------||\n"
     end
@@ -174,10 +174,10 @@ class Game
 
   def print_opportunities
     print_board
-    if turns > 1
-      puts "\n#{player.addresser(turns)} #{turns} opportunities to guess the code.\n\n"
+    if turns_left > 1
+      puts "\n#{player.addresser(turns_left)} #{turns_left} opportunities to guess the code.\n\n"
     else
-      puts "\n#{player.addresser(turns)} #{turns} opportunity left.\n\n"
+      puts "\n#{player.addresser(turns_left)} #{turns_left} opportunity left.\n\n"
     end
   end
 

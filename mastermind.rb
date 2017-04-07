@@ -48,6 +48,14 @@ class Human < Player
   def addresser(opportunities)
     opportunities > 1 ? "You have" : "You only have"
   end
+
+  def winning_message
+    "You WIN!"
+  end
+
+  def losing_message
+    "You lose!"
+  end
 end
 
 class Computer < Player
@@ -76,6 +84,14 @@ class Computer < Player
 
     sleep rand(1...2)
     @guess
+  end
+
+  def winning_message
+    "The computer WINS!"
+  end
+
+  def losing_message
+    "The computer loses!"
   end
 end
 
@@ -167,13 +183,13 @@ class Game
 
   def player_wins
     print_board(player_won: true)
-    puts "\nYou WIN!\n\n"
+    puts "\n#{player.winning_message}\n\n"
     exit
   end
 
   def player_loses
     print_board
-    puts "\nYou lose!\n\n"
+    puts "\n#{player.losing_message}\n\n"
     exit
   end
 end

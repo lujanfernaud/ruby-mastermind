@@ -27,17 +27,26 @@
 require 'pry'
 
 class Player
-  attr_accessor :guess, :guesses
+  attr_accessor :guess
 
   def initialize
     @guess = []
   end
 
   def input(game)
-    puts "Please introduce a code:"
-    print "> "
     @guess = gets.chomp.split
   end
+end
+
+class Human < Player
+  def input(game)
+    puts "Please introduce a code:"
+    print "> "
+    super
+  end
+end
+
+class Computer < Player
 end
 
 class Game
@@ -45,7 +54,7 @@ class Game
   attr_accessor :turns
 
   def initialize
-    @player   = Player.new
+    @player   = Human.new
     @colors   = %w(blue green red yellow)
     @code     = [colors.sample, colors.sample, colors.sample, colors.sample]
     @turns    = 12
@@ -54,7 +63,7 @@ class Game
 
   def start
     loop do
-      print_output
+      print_opportunities
       player.input(self)
       check(player.guess)
       player_wins if player.guess == code
@@ -103,7 +112,7 @@ class Game
     end
   end
 
-  def print_output
+  def print_opportunities
     print_board
     if turns > 1
       puts "\nYou have #{turns} opportunities to guess the code.\n\n"

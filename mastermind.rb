@@ -33,20 +33,50 @@ class Player
     @guess = []
   end
 
-  def input(game)
+  def input
     @guess = gets.chomp.split
   end
 end
 
 class Human < Player
-  def input(game)
+  def input
     puts "Please introduce a code:"
     print "> "
     super
   end
+
+  def addresser(opportunities)
+    opportunities > 1 ? "You have" : "You only have"
+  end
 end
 
 class Computer < Player
+  def initialize(game)
+    @colors = game.colors
+  end
+
+  def input
+    code_guesser
+  end
+
+  def addresser(opportunities)
+    opportunities > 1 ? "The computer has" : "The computer only has"
+  end
+
+  def code_guesser
+    @guess = [@colors.sample + " ", @colors.sample + " ",
+              @colors.sample + " ", @colors.sample]
+
+    print "> "
+    sleep rand(3..4)
+    @guess.each do |color|
+      color.split("").each { |letter| print letter; sleep 0.1 }
+      sleep rand(1...3)
+    end
+
+    sleep rand(1...2)
+    @guess
+  end
 end
 
 class Game
@@ -64,12 +94,26 @@ class Game
   def start
     loop do
       print_opportunities
-      player.input(self)
+      player.input
       check(player.guess)
       player_wins if player.guess == code
       @turns -= 1
       player_loses if @turns.zero?
     end
+  end
+
+  def setup
+    system "clear" or system "cls"
+    puts "Code breaker or code maker?"
+    print "> "
+    input = gets.chomp.downcase
+
+    @player = case input
+              when "code breaker" then Human.new
+              when "code maker"   then Computer.new(self)
+              end
+
+    start
   end
 
   def check(input)
@@ -115,9 +159,9 @@ class Game
   def print_opportunities
     print_board
     if turns > 1
-      puts "\nYou have #{turns} opportunities to guess the code.\n\n"
+      puts "\n#{player.addresser(turns)} #{turns} opportunities to guess the code.\n\n"
     else
-      puts "\nYou only have #{turns} opportunity left.\n\n"
+      puts "\n#{player.addresser(turns)} #{turns} opportunity left.\n\n"
     end
   end
 
@@ -134,4 +178,4 @@ class Game
   end
 end
 
-Game.new.start
+Game.new.setup

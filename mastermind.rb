@@ -203,12 +203,28 @@ class Game
   def player_wins
     print_board(player_won: true)
     puts "\n#{player.winning_message}\n\n"
-    exit
+    play_again
   end
 
   def player_loses
     print_board
     puts "\n#{player.losing_message}\n\n"
+    play_again
+  end
+
+  def play_again
+    puts "Play again? (y/n)"
+    input = gets.chomp.downcase
+
+    case input
+    when "y" then Game.new.setup
+    when "n" then goodbye
+    end
+  end
+
+  def goodbye
+    system "clear" or system "cls"
+    puts "Thanks for playing. Hope you liked it!\n\n"
     exit
   end
 end

@@ -68,6 +68,16 @@ class Computer < Player
     turns_left > 1 ? "The computer has" : "The computer only has"
   end
 
+  def winning_message
+    "The computer WINS!"
+  end
+
+  def losing_message
+    "The computer loses!"
+  end
+
+  private
+
   def code_guesser
     # Add empty spaces to print it as if the computer was typing it.
     @guess = [@colors.sample + " ", @colors.sample + " ",
@@ -89,14 +99,6 @@ class Computer < Player
     # Remove empty spaces.
     @guess = @guess.join(" ").split
     sleep rand(1...2) * 0.5
-  end
-
-  def winning_message
-    "The computer WINS!"
-  end
-
-  def losing_message
-    "The computer loses!"
   end
 end
 
@@ -214,6 +216,7 @@ class Game
 
   def play_again
     puts "Play again? (y/n)"
+    print "> "
     input = gets.chomp.downcase
 
     case input

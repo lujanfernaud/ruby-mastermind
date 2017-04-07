@@ -60,6 +60,7 @@ end
 
 class Computer < Player
   def initialize(game)
+    @game   = game
     @colors = game.colors
   end
 
@@ -72,18 +73,26 @@ class Computer < Player
   end
 
   def code_guesser
+    # Add empty spaces to print it as if the computer was typing it.
     @guess = [@colors.sample + " ", @colors.sample + " ",
               @colors.sample + " ", @colors.sample]
 
     print "> "
-    sleep rand(3..4)
-    @guess.each do |color|
-      color.split("").each { |letter| print letter; sleep 0.1 }
-      sleep rand(1...3)
+
+    if @game.turns_left == 12
+      sleep 1
+    else
+      sleep rand(3..4)
     end
 
-    sleep rand(1...2)
-    @guess
+    @guess.each do |color|
+      color.split("").each { |letter| print letter; sleep 0.07 }
+      sleep rand(1...2) - 0.5
+    end
+
+    # Remove empty spaces.
+    @guess = @guess.join(" ").split
+    sleep rand(1...2) * 0.5
   end
 
   def winning_message
@@ -96,8 +105,8 @@ class Computer < Player
 end
 
 class Game
-  attr_reader   :player, :colors, :code
-  attr_accessor :turns_left
+  attr_reader   :player, :colors
+  attr_accessor :turns_left, :code
 
   def initialize
     @player     = Human.new
@@ -105,6 +114,14 @@ class Game
     @code       = [colors.sample, colors.sample, colors.sample, colors.sample]
     @turns_left = 12
     @guesses    = []
+  end
+
+  def setup
+    system "clear" or system "cls"
+    breaker_or_maker
+    system "clear" or system "cls"
+    create_code
+    start
   end
 
   def start
@@ -118,8 +135,9 @@ class Game
     end
   end
 
-  def setup
-    system "clear" or system "cls"
+  private
+
+  def breaker_or_maker
     puts "Code breaker or code maker?"
     print "> "
     input = gets.chomp.downcase
@@ -128,8 +146,12 @@ class Game
               when "code breaker" then Human.new
               when "code maker"   then Computer.new(self)
               end
+  end
 
-    start
+  def create_code
+    puts "Create a 4 colors code code using blue, green, red and yellow:"
+    print "> "
+    @code = gets.chomp.downcase.split(" ")
   end
 
   def check(input)

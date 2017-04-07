@@ -115,8 +115,6 @@ class Game
   def setup
     system "clear" or system "cls"
     breaker_or_maker
-    system "clear" or system "cls"
-    create_code
     start
   end
 
@@ -142,9 +140,12 @@ class Game
               when "code breaker" then Human.new
               when "code maker"   then Computer.new(self)
               end
+
+    create_code if input == "code maker"
   end
 
   def create_code
+    system "clear" or system "cls"
     puts "Create a 4 colors code code using blue, green, red and yellow:"
     print "> "
     @code = gets.chomp.downcase.split(" ")

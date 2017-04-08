@@ -94,6 +94,17 @@ class Computer < Player
     print_guess
   end
 
+  def make_first_guess
+    @first_guesses = [%w(red red blue blue), %w(red red green green),
+                      %w(red red yellow yellow), %w(blue blue red red),
+                      %w(blue blue green green), %w(blue blue yellow yellow),
+                      %w(green green red red), %w(green green blue blue),
+                      %w(green green yellow yellow), %w(yellow yellow red red),
+                      %w(yellow yellow blue blue), %w(yellow yellow green green)]
+
+    @guess = @first_guesses.sample
+  end
+
   def find_best_guess
     previous_guess     = @guesses[-1]
     matching_colors    = previous_guess[:colors]
@@ -140,17 +151,6 @@ class Computer < Player
     end
   end
 
-  def make_first_guess
-    @first_guesses = [%w(red red blue blue), %w(red red green green),
-                      %w(red red yellow yellow), %w(blue blue red red),
-                      %w(blue blue green green), %w(blue blue yellow yellow),
-                      %w(green green red red), %w(green green blue blue),
-                      %w(green green yellow yellow), %w(yellow yellow red red),
-                      %w(yellow yellow blue blue), %w(yellow yellow green green)]
-
-    @guess = @first_guesses.sample
-  end
-
   def print_guess
     print "> "
     sleep_between_turns
@@ -168,7 +168,7 @@ class Computer < Player
     if @game.turns_left == 12
       sleep 1
     else
-      sleep rand(3..4)
+      sleep rand(3..4) - 0.5
     end
   end
 end
@@ -196,8 +196,8 @@ class Game
       print_opportunities
       player.input
       check(player.guess)
-      player_wins if player.guess == code
       @turns_left -= 1
+      player_wins if player.guess == code
       player_loses if @turns_left.zero?
     end
   end
@@ -236,7 +236,6 @@ class Game
 
       color_match = code.any? { |color| color == guess_color }
       color_not_in_matches = colors.none? { |color| color == guess_color }
-
       colors << guess_color if color_match && color_not_in_matches
     end
 
@@ -245,7 +244,6 @@ class Game
 
   def print_board(player_won: false)
     system "clear" or system "cls"
-    # print "||" + (" " * 35) + "||" + (" " * 26) + "||\n"
     print "||" + "CODE".center(35) + "||" + "CORRECT".center(26) + "||\n"
     print "||" + ("-" * 35) + "||" + ("-" * 26) + "||\n"
 

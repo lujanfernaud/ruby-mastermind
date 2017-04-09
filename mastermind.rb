@@ -194,12 +194,16 @@ class Game
 
   def start
     loop do
-      print_opportunities
-      player.input
-      check(player.guess)
-      @turns_left -= 1
-      player_wins if player.guess == code
-      player_loses if @turns_left.zero?
+      begin
+        print_opportunities
+        player.input
+        check(player.guess)
+        @turns_left -= 1
+        player_wins if player.guess == code
+        player_loses if @turns_left.zero?
+      rescue Interrupt
+        goodbye
+      end
     end
   end
 

@@ -244,7 +244,6 @@ class Game
 
   def print_game_title
     system "clear" or system "cls"
-
     puts " __  __           _                      _           _"
     puts "|  \\/  |         | |                    (_)         | |"
     puts "| \\  / | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |"

@@ -317,6 +317,9 @@ class Game
     when "y" then Game.new.setup
     when "n" then goodbye
     end
+
+  rescue Interrupt
+    goodbye
   end
 
   def goodbye

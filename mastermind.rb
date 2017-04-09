@@ -186,7 +186,7 @@ class Game
   end
 
   def setup
-    system "clear" or system "cls"
+    print_game_title
     breaker_or_maker
     start
   end
@@ -218,7 +218,7 @@ class Game
   end
 
   def create_code
-    system "clear" or system "cls"
+    print_game_title
     puts "Create a 4 colors code code using blue, green, red and yellow:"
     print "> "
     @code = gets.chomp.downcase.split(" ")
@@ -240,6 +240,17 @@ class Game
     end
 
     @guesses << { guess: input, colors: colors.length, positions: positions.length }
+  end
+
+  def print_game_title
+    system "clear" or system "cls"
+
+    puts " __  __           _                      _           _"
+    puts "|  \\/  |         | |                    (_)         | |"
+    puts "| \\  / | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |"
+    puts "| |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |"
+    puts "| |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |"
+    puts "|_|  |_|\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|\n\n"
   end
 
   def print_board(player_won: false)

@@ -186,7 +186,6 @@ class Game
   end
 
   def setup
-    print_game_title
     breaker_or_maker
     start
   end
@@ -205,16 +204,32 @@ class Game
   private
 
   def breaker_or_maker
-    puts "Code breaker or code maker?"
-    print "> "
-    input = gets.chomp.downcase
+    loop do
+      begin
+        print_game_title
+        puts "Code breaker or code maker?"
+        print "> "
+        input = gets.chomp.downcase
 
-    @player = case input
-              when "code breaker" then Human.new
-              when "code maker"   then Computer.new(self)
-              end
+        case input
+        when /breaker|maker/
+          input = input.match(/breaker|maker/)[0]
+          @player = case input
+                    when "breaker" then Human.new
+                    when "maker"   then Computer.new(self)
+                    end
 
-    create_code if input == "code maker"
+          create_code if input == "maker"
+          return
+        when /exit/
+          goodbye
+        else
+          redo
+        end
+      rescue Interrupt
+        goodbye
+      end
+    end
   end
 
   def create_code

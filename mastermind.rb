@@ -154,13 +154,7 @@ class Computer < Player
   def print_guess
     print "> "
     sleep_between_turns
-
-    @guess.each.with_index do |color, index|
-      color.split("").each { |letter| print letter; sleep 0.07 }
-      print " " if index != 3
-      sleep rand(1...2) - 0.5
-    end
-
+    print_color_code
     sleep rand(1...2) * 0.5
   end
 
@@ -169,6 +163,14 @@ class Computer < Player
       sleep 1
     else
       sleep rand(3..4) - 0.5
+    end
+  end
+
+  def print_color_code
+    @guess.each.with_index do |color, index|
+      color.split("").each { |letter| print letter; sleep 0.07 }
+      print " " if index != 3
+      sleep rand(1...2) - 0.5
     end
   end
 end

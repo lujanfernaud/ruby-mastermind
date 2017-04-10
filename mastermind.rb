@@ -126,18 +126,18 @@ class Computer < Player
 
   def make_guess
     @candidates.each do |candidate|
-      check(candidate)
+      candidate_score = score(candidate)
+      filter_candidate(candidate, candidate_score)
     end
-
     @guess = @candidates.sample
     4.times { @guess << @colors.sample } if @guess.none?
   end
 
-  def check(guess)
+  def score(candidate)
     positions = []
     colors    = []
 
-    guess.each.with_index do |guess_color, index|
+    candidate.each.with_index do |guess_color, index|
       @best_guess.each do |_previous_guess_color|
         positions << true if guess_color == @best_guess[index]
         break
@@ -147,11 +147,13 @@ class Computer < Player
       colors << guess_color if color_match && color_not_in_matches
     end
 
-    guess_score = [colors.size, positions.size]
+    [colors.size, positions.size]
+  end
 
-    case guess_score <=> @best_score
+  def filter_candidate(candidate, candidate_score)
+    case candidate_score <=> @best_score
     when -1, 1
-      @candidates.delete(guess)
+      @candidates.delete(candidate)
     end
   end
 

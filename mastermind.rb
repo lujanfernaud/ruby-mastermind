@@ -24,8 +24,6 @@
 #    its next guess will need to include that color somewhere.
 #    Feel free to make the AI even smarter.
 
-require 'pry'
-
 class Player
   attr_reader   :game
   attr_accessor :guess
@@ -63,8 +61,8 @@ end
 
 class Computer < Player
   def initialize(game)
-    @guess      = guess
     @game       = game
+    @guess      = guess
     @colors     = game.colors
     @guesses    = game.guesses
     @candidates = @colors.repeated_permutation(4).to_a

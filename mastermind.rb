@@ -195,14 +195,14 @@ class Game
     breaker_or_maker
     start
   rescue Interrupt
-    goodbye
+    exit_game
   end
 
   def start
     loop do
       print_opportunities
       player.input
-      check(player.guess)
+      check_guess(player.guess)
       @turns_left -= 1
       player_wins if player.guess == code
       player_loses if @turns_left.zero?
@@ -232,7 +232,7 @@ class Game
         create_code if input == "maker"
         return
       when /exit/
-        goodbye
+        exit_game
       else
         redo
       end
@@ -251,7 +251,7 @@ class Game
     end
   end
 
-  def check(input)
+  def check_guess(input)
     positions = []
     colors    = []
 
@@ -326,11 +326,11 @@ class Game
 
     case input
     when "y" then Game.new.setup
-    when "n" then goodbye
+    when "n" then exit_game
     end
   end
 
-  def goodbye
+  def exit_game
     system "clear" or system "cls"
     puts "Thanks for playing. Hope you liked it!\n\n"
     exit

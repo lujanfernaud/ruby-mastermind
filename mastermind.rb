@@ -204,7 +204,7 @@ class Game
     loop do
       print_opportunities
       player.input
-      check_guess(player.guess)
+      check(player.guess)
       @turns_left -= 1
       player_wins if player.guess == code
       player_loses if @turns_left.zero?
@@ -253,7 +253,7 @@ class Game
     end
   end
 
-  def check_guess(input)
+  def check(input)
     positions = []
     colors    = []
 

@@ -36,13 +36,12 @@ end
 
 class Human < Player
   def input
-    puts "Please introduce a code:"
     loop do
+      puts "\nIntroduce a 4 colors code code using blue, green, red and yellow:"
       print "> "
       @guess = game.validate_input(gets.chomp.downcase.split)
       return if @guess
       game.print_board
-      puts "\nIntroduce a 4 colors code code using blue, green, red and yellow:"
     end
   end
 
@@ -240,14 +239,12 @@ class Game
   end
 
   def create_code
-    print_game_title
-    puts "\nCreate a 4 colors code code using blue, green, red and yellow:"
     loop do
+      print_game_title
+      puts "\nIntroduce a 4 colors code code using blue, green, red and yellow:"
       print "> "
       @code = validate_input(gets.chomp.downcase.split)
       return if @code
-      print_game_title
-      puts "\nIntroduce a 4 colors code code using blue, green, red and yellow:"
     end
   end
 
@@ -301,9 +298,9 @@ class Game
   def print_opportunities
     print_board
     if turns_left > 1
-      puts "\n#{player.addresser(turns_left)} #{turns_left} opportunities to guess the code.\n\n"
+      puts "\n#{player.addresser(turns_left)} #{turns_left} opportunities to guess the code.\n"
     else
-      puts "\n#{player.addresser(turns_left)} #{turns_left} opportunity left.\n\n"
+      puts "\n#{player.addresser(turns_left)} #{turns_left} opportunity left.\n"
     end
   end
 

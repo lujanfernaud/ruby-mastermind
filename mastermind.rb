@@ -208,10 +208,12 @@ class Game
     end
   end
 
-  def validate_input(guess)
-    colors_in_color_list = guess.all? { |color| @colors.include?(color) }
-    guess_size = guess.size == 4
-    return guess if colors_in_color_list && guess_size
+  def validate_input(input)
+    return exit_game if input.join == "exit"
+
+    colors_in_color_list = input.all? { |color| @colors.include?(color) }
+    guess_size = input.size == 4
+    return input if colors_in_color_list && guess_size
   end
 
   def breaker_or_maker

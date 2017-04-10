@@ -27,9 +27,11 @@
 require 'pry'
 
 class Player
+  attr_reader   :game
   attr_accessor :guess
 
-  def initialize
+  def initialize(game)
+    @game  = game
     @guess = []
   end
 end
@@ -37,8 +39,13 @@ end
 class Human < Player
   def input
     puts "Please introduce a code:"
-    print "> "
-    @guess = gets.chomp.split
+    loop do
+      print "> "
+      @guess = game.validate_input(gets.chomp.downcase.split)
+      return if @guess
+      game.print_board
+      puts "\nIntroduce a 4 colors code code using blue, green, red and yellow:"
+    end
   end
 
   def addresser(turns_left)
@@ -90,7 +97,6 @@ class Computer < Player
       find_best_guess
       make_guess
     end
-
     print_guess
   end
 
@@ -106,10 +112,9 @@ class Computer < Player
   end
 
   def find_best_guess
-    previous_guess     = @guesses[-1]
-    matching_colors    = previous_guess[:colors]
-    matching_positions = previous_guess[:positions]
-
+    previous_guess       = @guesses[-1]
+    matching_colors      = previous_guess[:colors]
+    matching_positions   = previous_guess[:positions]
     previous_guess_score = [matching_colors, matching_positions]
 
     case @best_score <=> previous_guess_score
@@ -137,13 +142,12 @@ class Computer < Player
         positions << true if guess_color == @best_guess[index]
         break
       end
-
       color_match = @best_guess.any? { |color| color == guess_color }
       color_not_in_matches = colors.none? { |color| color == guess_color }
       colors << guess_color if color_match && color_not_in_matches
     end
 
-    guess_score = [colors.length, positions.length]
+    guess_score = [colors.size, positions.size]
 
     case guess_score <=> @best_score
     when -1, 1
@@ -180,7 +184,7 @@ class Game
   attr_accessor :turns_left, :code
 
   def initialize
-    @player     = Human.new
+    @player     = player
     @colors     = %w(blue green red yellow)
     @code       = [colors.sample, colors.sample, colors.sample, colors.sample]
     @turns_left = 12
@@ -190,59 +194,61 @@ class Game
   def setup
     breaker_or_maker
     start
+  rescue Interrupt
+    goodbye
   end
 
   def start
     loop do
-      begin
-        print_opportunities
-        player.input
-        check(player.guess)
-        @turns_left -= 1
-        player_wins if player.guess == code
-        player_loses if @turns_left.zero?
-      rescue Interrupt
-        goodbye
-      end
+      print_opportunities
+      player.input
+      check(player.guess)
+      @turns_left -= 1
+      player_wins if player.guess == code
+      player_loses if @turns_left.zero?
     end
   end
 
-  private
+  def validate_input(guess)
+    colors_in_color_list = guess.all? { |color| @colors.include?(color) }
+    guess_size = guess.size == 4
+    return guess if colors_in_color_list && guess_size
+  end
 
   def breaker_or_maker
     loop do
-      begin
-        print_game_title
-        puts "Code breaker or code maker?"
-        print "> "
-        input = gets.chomp.downcase
+      print_game_title
+      puts "\nCode breaker or code maker?"
+      print "> "
+      input = gets.chomp.downcase
 
-        case input
-        when /breaker|maker/
-          input = input.match(/breaker|maker/)[0]
-          @player = case input
-                    when "breaker" then Human.new
-                    when "maker"   then Computer.new(self)
-                    end
-
-          create_code if input == "maker"
-          return
-        when /exit/
-          goodbye
-        else
-          redo
-        end
-      rescue Interrupt
+      case input
+      when /breaker|maker/
+        input   = input.match(/breaker|maker/)[0]
+        @player = case input
+                  when "breaker" then Human.new(self)
+                  when "maker"   then Computer.new(self)
+                  end
+        create_code if input == "maker"
+        return
+      when /exit/
         goodbye
+      else
+        redo
       end
     end
   end
 
   def create_code
     print_game_title
-    puts "Create a 4 colors code code using blue, green, red and yellow:"
-    print "> "
-    @code = gets.chomp.downcase.split(" ")
+    puts "\nCreate a 4 colors code code using blue, green, red and yellow:"
+    loop do
+      print "> "
+      @code = validate_input(gets.chomp.downcase.split)
+      return if @code
+      print_game_title
+      puts "\nIntroduce a 4 colors code code using blue, green, red and yellow:"
+    end
   end
 
   def check(input)
@@ -254,13 +260,12 @@ class Game
         positions << true if guess_color == code[index]
         break
       end
-
       color_match = code.any? { |color| color == guess_color }
       color_not_in_matches = colors.none? { |color| color == guess_color }
       colors << guess_color if color_match && color_not_in_matches
     end
 
-    @guesses << { guess: input, colors: colors.length, positions: positions.length }
+    @guesses << { guess: input, colors: colors.size, positions: positions.size }
   end
 
   def print_game_title
@@ -270,7 +275,7 @@ class Game
     puts "| \\  / | __ _ ___| |_ ___ _ __ _ __ ___  _ _ __   __| |"
     puts "| |\\/| |/ _` / __| __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` |"
     puts "| |  | | (_| \\__ \\ ||  __/ |  | | | | | | | | | | (_| |"
-    puts "|_|  |_|\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|\n\n"
+    puts "|_|  |_|\\__,_|___/\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|\n"
   end
 
   def print_board(player_won: false)
@@ -323,9 +328,6 @@ class Game
     when "y" then Game.new.setup
     when "n" then goodbye
     end
-
-  rescue Interrupt
-    goodbye
   end
 
   def goodbye

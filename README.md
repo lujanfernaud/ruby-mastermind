@@ -1,8 +1,8 @@
 # Ruby Mastermind
 
-Mastermind command line game in Ruby for [The Odin Project](http://www.theodinproject.com/courses/ruby-programming/lessons/oop).
+Mastermind command line game in Ruby for [The Odin Project](http://www.theodinproject.com/courses/ruby-programming/lessons/oop). Updated for the [Testing Ruby](https://www.theodinproject.com/courses/ruby-programming/lessons/testing-ruby) lesson.
 
-The game may be run with `ruby mastermind.rb`
+The game may be run with `ruby play.rb`
 
 ## Task
 

@@ -32,7 +32,8 @@ class Game
     return exit_game if input.join == "exit"
 
     colors_in_color_list = input.all? { |color| @colors.include?(color) }
-    guess_size = input.size == 4
+    guess_size           = input.size == 4
+
     return input if colors_in_color_list && guess_size
   end
 

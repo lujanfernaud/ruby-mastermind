@@ -36,16 +36,28 @@ class Game
     return input if colors_in_color_list && guess_size
   end
 
-  def print_board(player_won: false)
+  def print_board(*args)
+    print_board_header
+    print_board_body
+    print_board_guesses(*args)
+  end
+
+  private
+
+  def print_board_header
     system "clear" or system "cls"
     print "||" + "CODE".center(35) + "||" + "CORRECT".center(26) + "||\n"
     print "||" + ("-" * 35) + "||" + ("-" * 26) + "||\n"
+  end
 
+  def print_board_body
     @turns_left.times do
       print "||" + ("        |" * 4) + "|" + (" " * 26) + "||\n"
       print "||" + ("--------|" * 4) + "|--------------------------||\n"
     end
+  end
 
+  def print_board_guesses(player_won: false)
     @guesses.reverse.each.with_index do |pair, index|
       print "|"
       pair[:guess].each { |color| print "| #{color.ljust(7)}" }
@@ -55,8 +67,6 @@ class Game
       print "\n||" + ("--------|" * 4) + "|--------------------------||\n"
     end
   end
-
-  private
 
   def breaker_or_maker
     loop do

@@ -1,5 +1,5 @@
 describe Game do
-  let(:game)       { Game.new }
+  let(:game)       { described_class.new }
   let(:player)     { game.player }
   let(:colors)     { game.colors }
   let(:code)       { game.code }

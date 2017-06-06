@@ -4,8 +4,8 @@ class Game
 
   def initialize
     @player     = player
-    @colors     = %w(blue green red yellow)
-    @code       = [colors.sample, colors.sample, colors.sample, colors.sample]
+    @colors     = %w[blue green red yellow]
+    @code       = Array.new(4) { colors.sample }
     @turns_left = 12
     @guesses    = []
   end

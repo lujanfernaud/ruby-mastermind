@@ -38,12 +38,12 @@ class Computer < Player
   end
 
   def make_first_guess
-    @first_guesses = [%w(red red blue blue), %w(red red green green),
-                      %w(red red yellow yellow), %w(blue blue red red),
-                      %w(blue blue green green), %w(blue blue yellow yellow),
-                      %w(green green red red), %w(green green blue blue),
-                      %w(green green yellow yellow), %w(yellow yellow red red),
-                      %w(yellow yellow blue blue), %w(yellow yellow green green)]
+    @first_guesses = [%w[red red blue blue], %w[red red green green],
+                      %w[red red yellow yellow], %w[blue blue red red],
+                      %w[blue blue green green], %w[blue blue yellow yellow],
+                      %w[green green red red], %w[green green blue blue],
+                      %w[green green yellow yellow], %w[yellow yellow red red],
+                      %w[yellow yellow blue blue], %w[yellow yellow green green]]
 
     @guess = @first_guesses.sample
   end
@@ -63,34 +63,42 @@ class Computer < Player
 
   def make_guess
     @candidates.each do |candidate|
-      candidate_score = score(candidate)
-      filter_candidate(candidate, candidate_score)
+      filter_candidate(candidate, score_candidate(candidate))
     end
+
     @guess = @candidates.sample
+
     4.times { @guess << @colors.sample } if @guess.none?
   end
 
-  def score(candidate)
-    positions = []
+  def score_candidate(candidate)
     colors    = []
+    positions = []
 
+    parse_candidate(candidate, colors, positions)
+
+    [colors.size, positions.size]
+  end
+
+  def parse_candidate(candidate, colors, positions)
     candidate.each.with_index do |guess_color, index|
       @best_guess.each do |_previous_guess_color|
         positions << true if guess_color == @best_guess[index]
         break
       end
-      color_match = @best_guess.any? { |color| color == guess_color }
-      color_not_in_matches = colors.none? { |color| color == guess_color }
-      colors << guess_color if color_match && color_not_in_matches
-    end
 
-    [colors.size, positions.size]
+      color_match = proc { |color| color == guess_color }
+
+      color_in_best_guess  = @best_guess.any?(&color_match)
+      color_not_in_matches = colors.none?(&color_match)
+
+      colors << guess_color if color_in_best_guess && color_not_in_matches
+    end
   end
 
   def filter_candidate(candidate, candidate_score)
     case candidate_score <=> @best_score
-    when -1, 1
-      @candidates.delete(candidate)
+    when -1, 1 then @candidates.delete(candidate)
     end
   end
 

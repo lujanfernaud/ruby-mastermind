@@ -1,6 +1,6 @@
 class Game
-  attr_reader   :player, :colors, :guesses
-  attr_accessor :turns_left, :code
+  attr_reader   :colors, :guesses
+  attr_accessor :player, :turns_left, :code
 
   def initialize
     @player     = player
@@ -20,27 +20,26 @@ class Game
   def start
     loop do
       print_opportunities
-      player.input
-      check(player.guess)
-      @turns_left -= 1
-      player_wins if player.guess == code
-      player_loses if @turns_left.zero?
+      player_turn
+
+      player_wins  if player.guess == code
+      player_loses if turns_left.zero?
     end
-  end
-
-  def validate_input(input)
-    return exit_game if input.join == "exit"
-
-    colors_in_color_list = input.all? { |color| @colors.include?(color) }
-    guess_size           = input.size == 4
-
-    return input if colors_in_color_list && guess_size
   end
 
   def print_board(*args)
     print_board_header
     print_board_body
     print_board_guesses(*args)
+  end
+
+  def validate_input(input)
+    return exit_game if input.join == "exit"
+
+    colors_in_color_list = input.all? { |color| colors.include?(color) }
+    guess_size           = input.size == 4
+
+    return input if colors_in_color_list && guess_size
   end
 
   private
@@ -74,15 +73,15 @@ class Game
       print_game_title
       puts "\nCode breaker or code maker?"
       print "> "
-      input = gets.chomp.downcase
+      input = STDIN.gets.chomp.downcase
 
       case input
       when /breaker|maker/
-        input   = input.match(/breaker|maker/)[0]
-        @player = case input
-                  when "breaker" then Human.new(self)
-                  when "maker"   then Computer.new(self)
-                  end
+        input        = input.match(/breaker|maker/)[0]
+        self.player  = case input
+                       when "breaker" then Human.new(self)
+                       when "maker"   then Computer.new(self)
+                       end
         create_code if input == "maker"
         return
       when /exit/
@@ -98,9 +97,15 @@ class Game
       print_game_title
       puts "\nIntroduce a 4 colors code code using blue, green, red and yellow:"
       print "> "
-      @code = validate_input(gets.chomp.downcase.split)
+      @code = validate_input(STDIN.gets.chomp.downcase.split)
       return if @code
     end
+  end
+
+  def player_turn
+    player.input
+    check(player.guess)
+    @turns_left -= 1
   end
 
   def check(input)

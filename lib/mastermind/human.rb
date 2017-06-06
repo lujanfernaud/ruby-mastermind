@@ -3,7 +3,7 @@ class Human < Player
     loop do
       puts "\nIntroduce a 4 colors code code using blue, green, red and yellow:"
       print "> "
-      @guess = game.validate_input(gets.chomp.downcase.split)
+      @guess = game.validate_input(STDIN.gets.chomp.downcase.split)
       return if @guess
       game.print_board
     end

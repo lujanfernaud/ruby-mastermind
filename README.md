@@ -1,9 +1,9 @@
 # Ruby Mastermind
 
-Mastermind command line game in Ruby for [The Odin Project](http://www.theodinproject.com/courses/ruby-programming/lessons/oop). Updated for the [Testing Ruby](https://www.theodinproject.com/courses/ruby-programming/lessons/testing-ruby) lesson.
+[Mastermind](https://en.wikipedia.org/wiki/Mastermind_%28board_game%29) command line game written in Ruby.
 
 The game may be run with `ruby play.rb`
 
-## Task
+## Author
 
-Build a Mastermind game from the command line where you have 12 turns to guess the secret code, starting with you guessing the computer's random code.
+- [Luján Fernaud](https://github.com/lujanfernaud)
